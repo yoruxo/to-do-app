@@ -3,7 +3,7 @@ import TaskList from './components/TaskList';
 import AddTask from './components/AddTask';
 import './App.css';
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 export default function App() {
   const [tasks, setTasks] = useState([]);
@@ -30,12 +30,12 @@ export default function App() {
     fetchTasks();
   }, []);
 
-  async function addTask(title) {
+  async function addTask(title, deadline) {
     try {
       const res = await fetch(`${API_BASE}/tasks`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title }),
+        body: JSON.stringify({ title, deadline: deadline || null }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -45,6 +45,21 @@ export default function App() {
       setTasks((prev) => [task, ...prev]);
     } catch (err) {
       throw err;
+    }
+  }
+
+  async function updateTaskDeadline(id, deadline) {
+    try {
+      const res = await fetch(`${API_BASE}/tasks/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ deadline: deadline || null }),
+      });
+      if (!res.ok) throw new Error('Failed to update deadline');
+      const updated = await res.json();
+      setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
+    } catch (err) {
+      console.error(err);
     }
   }
 
@@ -93,6 +108,7 @@ export default function App() {
           tasks={tasks}
           onToggle={toggleTask}
           onDelete={deleteTask}
+          onUpdateDeadline={updateTaskDeadline}
         />
       )}
     </div>

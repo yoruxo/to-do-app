@@ -1,6 +1,6 @@
 import TaskItem from './TaskItem';
 
-export default function TaskList({ tasks, onToggle, onDelete }) {
+export default function TaskList({ tasks, onToggle, onDelete, onUpdateDeadline }) {
   if (tasks.length === 0) {
     return (
       <p className="empty-state">
@@ -17,6 +17,7 @@ export default function TaskList({ tasks, onToggle, onDelete }) {
           task={task}
           onToggle={onToggle}
           onDelete={onDelete}
+          onUpdateDeadline={onUpdateDeadline}
         />
       ))}
     </ul>
