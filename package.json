@@ -1,0 +1,40 @@
+{
+  "name": "task-manager-desktop",
+  "version": "1.0.0",
+  "description": "Task Manager – React + Node + PostgreSQL + Electron",
+  "private": true,
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "concurrently -n front,electron -c cyan,magenta \"npm run dev:frontend\" \"wait-on http://localhost:5173 && npm run electron\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "electron": "electron .",
+    "build": "cd frontend && npm run build",
+    "start": "electron .",
+    "dist": "npm run build && electron-builder"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "electron": "^40.6.0",
+    "electron-builder": "^26.8.1",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "com.taskmanager.desktop",
+    "productName": "Task Manager",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "electron/**",
+      "frontend/dist/**"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.productivity"
+    }
+  }
+}
